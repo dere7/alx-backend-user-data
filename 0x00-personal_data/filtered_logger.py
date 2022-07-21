@@ -19,14 +19,13 @@ def filter_datum(fields: List[str], redaction: str, message: str,
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-        """
+    """Redacting Formatter class"""
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields : List[str]):
+    def __init__(self, fields: List[str]):
         """accepts a list of string fields"""
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
@@ -34,9 +33,9 @@ class RedactingFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """filter vaues in incoming log record"""
         msg = filter_datum(self.fields, self.REDACTION, record.msg,
-                                  self.SEPARATOR)
-	msg = '; '.join(msg.split(';')))
-	record.msg = msg
+                           self.SEPARATOR)
+        msg = '; '.join(msg.split(';'))
+        record.msg = msg
         return super().format(record)
 
 
@@ -71,8 +70,8 @@ def main():
     for (name, email, phone, ssn, password, ip, last_login,
          user_agent) in cursor:
         logger.info(
-            f'name={name}; email={email}; phone={phone}; ssn={ssn}; \
-password={password}; ip={ip}; last_login={last_login}; \
+            f'name={name};email={email};phone={phone};ssn={ssn};\
+password={password};ip={ip};last_login={last_login};\
 user_agent={user_agent};')
     cursor.close()
     db.close()
