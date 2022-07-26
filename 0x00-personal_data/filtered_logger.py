@@ -34,8 +34,7 @@ class RedactingFormatter(logging.Formatter):
         """filter vaues in incoming log record"""
         msg = filter_datum(self.fields, self.REDACTION, record.msg,
                            self.SEPARATOR)
-        msg = '; '.join(msg.split(';'))
-        record.msg = msg
+        record.msg = '; '.join(msg.split(';'))[:-1]
         return super().format(record)
 
 

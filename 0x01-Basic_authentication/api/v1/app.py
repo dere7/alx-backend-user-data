@@ -15,11 +15,6 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 
 
-@app.route('/test/', strict_slashes=False)
-def index():
-    return 'you\'re home'
-
-
 auth_type = os.getenv('AUTH_TYPE')
 if auth_type == 'auth':
     from api.v1.auth.auth import Auth

@@ -1,26 +1,24 @@
 #!/usr/bin/env python3
-"""
-contains a class that manages authentication
-"""
-from flask import request, Request
+"""Contains a class that manages authentications"""
+from flask import Request
 from typing import TypeVar, List
 
 
 class Auth:
-    """Manages user authentication"""
+    """Manages user authentication and base for other auth classes"""
 
-    def require_auth(self, path: str, execlude_paths: List[str]) -> bool:
+    def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """Checks if a path requires authentication"""
         if path is None:
             return True
-        if execlude_paths is None:
+        if excluded_paths is None:
             return True
-        if path in execlude_paths or path + '/' in execlude_paths:
+        if path in excluded_paths or path + '/' in excluded_paths:
             return False
 
         return True
 
-    def authorization_header(self, request: Request = None) -> str:
+    def authorization_header(self, request=None) -> str:
         """Return authorization header"""
         if request is None:
             return None
@@ -30,6 +28,6 @@ class Auth:
             return request.headers.get('Authorization')
         return None
 
-    def current_user(self, request: Request = None) -> TypeVar('User'):
+    def current_user(self, request=None) -> TypeVar('User'):
         """Gets current logged in user"""
         return None
