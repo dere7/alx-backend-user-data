@@ -15,8 +15,9 @@ class BasicAuth(Auth):
     def extract_base64_authorization_header(self,
                                             authorization_header: str) -> str:
         """gets authorization value from authorization header"""
-        if not authorization_header or type(authorization_header) is (
-                not str or not authorization_header.startswith('Basic ')):
+        if not authorization_header or type(authorization_header) is not str:
+            return None
+        if not authorization_header.startswith('Basic '):
             return None
         return authorization_header.split(' ')[1]
 
@@ -28,9 +29,9 @@ class BasicAuth(Auth):
         if type(base64_header) is not str:
             return None
         try:
-            return base64.b64decode(
-                base64_header).decode('utf-8')
-        except binascii.Error:
+            decoded_str = base64.b64decode(base64_header)
+            return decoded_str.decode('utf-8')
+        except (binascii.Error, UnicodeDecodeError) as err:
             return None
 
     def extract_user_credentials(self,
@@ -40,9 +41,12 @@ class BasicAuth(Auth):
             return None, None
         if type(decoded_header) is not str:
             return None, None
-        if decoded_header.find(':') == -1:
+        indx = decoded_header.find(':')
+        if  indx == -1:
             return None, None
-        return tuple(decoded_header.split(':'))
+        email = decoded_header[:indx]
+        pwd = decoded_header[indx+1:]
+        return email, pwd
 
     def user_object_from_credentials(self, user_email: str,
                                      user_pwd: str) -> TypeVar('User'):
