@@ -42,7 +42,7 @@ class BasicAuth(Auth):
         if type(decoded_header) is not str:
             return None, None
         indx = decoded_header.find(':')
-        if  indx == -1:
+        if indx == -1:
             return None, None
         email = decoded_header[:indx]
         pwd = decoded_header[indx+1:]
@@ -51,10 +51,12 @@ class BasicAuth(Auth):
     def user_object_from_credentials(self, user_email: str,
                                      user_pwd: str) -> TypeVar('User'):
         """Gets user instance for given email and password"""
-        if not user_email or type(user_email) is (
-                not str or not user_pwd or type(user_pwd) is not str):
+        if not user_email or type(user_email) is not str:
+            return None
+        if not user_pwd or type(user_pwd) is not str:
             return None
 
+        User.load_from_file()
         users = User.search({'email': user_email})
         if len(users) == 0:
             return None

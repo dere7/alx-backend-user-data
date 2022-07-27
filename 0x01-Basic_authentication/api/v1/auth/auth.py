@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Contains a class that manages authentications"""
-from flask import Request
+from flask import request
 from typing import TypeVar, List
 
 
