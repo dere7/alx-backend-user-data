@@ -25,6 +25,12 @@ elif auth_type == 'basic_auth':
 elif auth_type == 'session_auth':
     from .auth.session_auth import SessionAuth
     auth = SessionAuth()
+elif auth_type == 'session_exp_auth':
+    from .auth.session_exp_auth import SessionExpAuth
+    auth = SessionExpAuth()
+elif auth_type == 'session_db_auth':
+    from .auth.session_db_auth import SessionDBAuth
+    auth = SessionDBAuth()
 
 
 @app.before_request

@@ -36,7 +36,7 @@ def login():
     user = users[0]
     from api.v1.app import auth
     session_id = auth.create_session(user.id)
-    resp = make_response(user.to_json())
+    resp = jsonify(user.to_json())
     resp.set_cookie('SESSION_NAME', session_id)
     return resp
 
