@@ -2,12 +2,8 @@
 """DB module
 """
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.exc import InvalidRequestError
-
 from user import Base, User
 
 
@@ -48,5 +44,8 @@ class DB:
         """Updates a user with user_id"""
         user = self.find_user_by(id=user_id)
         for k, v in kwargs.items():
+            if k not in ['email', 'hashed_password', 'session_id',
+                         'reset_token']:
+                raise ValueError(f'{k} can\'t be added')
             setattr(user, k, v)
         self._session.commit()
