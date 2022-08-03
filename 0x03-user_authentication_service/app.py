@@ -60,16 +60,64 @@ def login():
 def logout():
     """DELETE /sessions
         - logout(destory session)
-    the request should contain cookie with 'session_id'
+        - the request should contain cookie with 'session_id'
     """
     session_id = request.cookies.get('session_id')
     if session_id:
         user = AUTH.get_user_from_session_id(session_id)
         if user:
             AUTH.destroy_session(user.id)
-            redirect('/')
+            return redirect('/')
         else:
             abort(403)
+
+
+@app.route('/profile')
+def profile():
+    """GET /profile
+        - returns email
+        - requires session_id cookie
+    """
+    session_id = request.cookies.get('session_id')
+    if session_id:
+        user = AUTH.get_user_from_session_id(session_id)
+        if user:
+            return jsonify({"email": user.email})
+    abort(403)
+
+
+@app.route('/reset_password', methods=['POST'])
+def get_reset_password_token():
+    """POST /reset_password
+        - returns reset_token
+    Post body
+        - email
+    """
+    email = request.form.get('email')
+    try:
+        reset_token = AUTH.get_reset_password_token(email)
+        return jsonify({"email": email, "reset_token": reset_token})
+    except ValueError:
+        abort(403)
+
+
+@app.route('/reset_password', methods=['PUT'])
+def update_password():
+    """PUT /rest_password
+        -- updates password
+    Put body
+        - email
+        - reset_token
+        - new_password
+    """
+    email = request.form.get('email')
+    password = request.form.get('new_password')
+    reset_token = request.form.get('reset_token')
+    try:
+        AUTH.update_password(reset_token, password)
+        return jsonify({"email": email, "message": "Password updated"})
+    except ValueError:
+        abort(403)
 
 
 if __name__ == "__main__":
