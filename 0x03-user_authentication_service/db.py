@@ -40,12 +40,11 @@ class DB:
         user = self._session.query(User).filter_by(**kwargs).one()
         return user
 
-    def update_user(self, user_id: int, **kwargs) -> User:
+    def update_user(self, user_id: int, **kwargs) -> None:
         """Updates a user with user_id"""
         user = self.find_user_by(id=user_id)
         for k, v in kwargs.items():
-            if k not in ['email', 'hashed_password', 'session_id',
-                         'reset_token']:
+            if k not in user.__dict__:
                 raise ValueError()
             setattr(user, k, v)
         self._session.commit()
